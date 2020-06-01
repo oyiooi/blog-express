@@ -63,9 +63,12 @@ router.put('/',function(req,res,next){
 })
 
 router.delete('/:id',function(req,res,next){
-    Article.findOneByIdAndDelete(req.params.id,function(err,product){
-        if(err) return next(err);
-        res.send(JSON.stringify(product))
+    Article.findOneAndDelete({_id:req.params.id},function(err,product){
+        if(err){
+            res.send(JSON.stringify({error: true}));
+        }else{
+            res.send(JSON.stringify({error: false,deleteId:product._id}));
+        }   
     })
 })
 
