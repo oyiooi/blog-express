@@ -6,7 +6,9 @@
 
 var app = require('../app');
 var debug = require('debug')('blog-express:server');
-var http = require('http');
+var https = require('https');
+var fs = require('fs');
+var path = require('path');
 
 /**
  * Get port from environment and store in Express.
@@ -15,12 +17,18 @@ var http = require('http');
 var port = normalizePort(process.env.PORT || '8000');
 app.set('port', port);
 
+//读取密钥和签名证书
+var options = {
+  key: fs.readFileSync(path.join(process.cwd(),'ssl/2_www.feelingwilling.club.key')),
+  cert: fs.readFileSync(path.join(process.cwd(),'ssl/1_www.feelingwilling.club_bundle.crt'))
+}
+
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
-
+// var server = http.createServer(app);
+var server = https.createServer(options,app);
 /**
  * Listen on provided port, on all network interfaces.
  */
